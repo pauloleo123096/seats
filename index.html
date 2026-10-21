@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SeatSync | BPO Seating Allocation & Shift CRM</title>
+  <!-- Load Tailwind CSS for clean styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #090d16;
+      color: #f1f5f9;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .grid-canvas {
+      background-size: 28px 28px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-extrabold text-white">
+          S
+        </div>
+        <div>
+          <span class="font-bold text-lg text-white">SeatSync</span>
+          <span class="ml-2 text-xs px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
+            seats.phguilds.org
+          </span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+        <a href="#preview" class="hover:text-white transition">UI Preview</a>
+        <a href="#pillars" class="hover:text-white transition">Core Features</a>
+        <a href="#workflow" class="hover:text-white transition">How It Works</a>
+      </nav>
+
+      <a href="#preview" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition">
+        Interactive Demo
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1">
+    <section class="py-16 lg:py-24 border-b border-slate-800 grid-canvas">
+      <div class="max-w-6xl mx-auto px-6 text-center space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium">
+          BPO Floor Plan & Shift CRM Software
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight">
+          Stop Seat Overlaps Across <span class="text-indigo-400">Rotating BPO Shifts.</span>
+        </h1>
+
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+          Design any physical floor plan regardless of room size, customize on-time agent headcount per schedule like a CRM, and automatically resolve team seat collisions.
+        </p>
+      </div>
+
+      <!-- Interactive Wireframe Replica (Matches Python Pygame App Layout) -->
+      <div id="preview" class="max-w-5xl mx-auto px-6 mt-12">
+        <div class="bg-slate-900 border-2 border-slate-700 rounded-xl overflow-hidden shadow-2xl">
+
+          <!-- Top Row: Header Box + 4 Mode Tabs (LayOut | DIMENSION | SCHEDULE | AUTOMATE) -->
+          <div class="grid grid-cols-12 border-b-2 border-slate-700 bg-slate-950">
+            <div class="col-span-3 lg:col-span-2 p-3 border-r-2 border-slate-700 flex items-center justify-center font-mono text-xs font-bold text-indigo-400">
+              SEATSYNC v1.0
+            </div>
+            <div class="col-span-9 lg:col-span-10 flex flex-wrap">
+              <button onclick="setTab('LAYOUT')" id="tab-LAYOUT" class="px-6 py-3 font-mono text-sm font-bold border-r border-slate-800 bg-indigo-600 text-white">
+                LayOut
+              </button>
+              <button onclick="setTab('DIMENSION')" id="tab-DIMENSION" class="px-6 py-3 font-mono text-sm font-bold border-r border-slate-800 text-slate-400 hover:text-white">
+                DIMENSION
+              </button>
+              <button onclick="setTab('SCHEDULE')" id="tab-SCHEDULE" class="px-6 py-3 font-mono text-sm font-bold border-r border-slate-800 text-slate-400 hover:text-white">
+                SCHEDULE
+              </button>
+              <button onclick="setTab('AUTOMATE')" id="tab-AUTOMATE" class="px-6 py-3 font-mono text-sm font-bold text-emerald-400 hover:bg-emerald-500/10">
+                AUTOMATE
+              </button>
+            </div>
+          </div>
+
+          <!-- Middle Row: Left Sidebar + Center Canvas + Right Inspector -->
+          <div class="grid grid-cols-12 min-h-[380px]">
+
+            <!-- Left Sidebar (6 Tool Slots: RECT, 8AM, 3x3, +OnTime, -OnTime, Clear) -->
+            <div class="col-span-3 lg:col-span-2 border-r-2 border-slate-700 bg-slate-900/90 p-3 flex flex-col gap-2.5">
+              <button onclick="cycleShape()" id="btn-shape" class="w-full py-2.5 px-2 rounded border-2 border-slate-600 bg-slate-800 hover:border-indigo-400 font-mono text-xs font-bold text-white text-center">
+                RECT
+              </button>
+              <button onclick="cycleShift()" id="btn-shift" class="w-full py-2.5 px-2 rounded border-2 border-slate-600 bg-slate-800 hover:border-indigo-400 font-mono text-xs font-bold text-amber-400 text-center">
+                8AM
+              </button>
+              <button onclick="cycleGrid()" id="btn-grid" class="w-full py-2.5 px-2 rounded border-2 border-slate-600 bg-slate-800 hover:border-indigo-400 font-mono text-xs font-bold text-emerald-400 text-center">
+                3x3
+              </button>
+              <button onclick="adjustAgents(1)" class="w-full py-2.5 px-2 rounded border-2 border-slate-700 bg-slate-950 hover:border-slate-500 font-mono text-xs text-slate-300 text-center">
+                + ON-TIME
+              </button>
+              <button onclick="adjustAgents(-1)" class="w-full py-2.5 px-2 rounded border-2 border-slate-700 bg-slate-950 hover:border-slate-500 font-mono text-xs text-slate-300 text-center">
+                - ON-TIME
+              </button>
+              <button onclick="autoResolve()" class="w-full py-2.5 px-2 rounded border-2 border-indigo-500/40 bg-indigo-600/20 hover:bg-indigo-600/40 font-mono text-xs font-bold text-indigo-300 text-center">
+                AUTO-FIX
+              </button>
+            </div>
+
+            <!-- Center Workspace Canvas -->
+            <div class="col-span-9 lg:col-span-8 p-6 bg-slate-950 grid-canvas flex flex-col justify-between">
+              <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-4">
+                <span id="canvas-mode-title">MODE: LayOut (Floor Pod Matrix)</span>
+                <span id="canvas-specs">ROOM: Flexible Grid | ACTIVE AGENTS: 7</span>
+              </div>
+
+              <!-- Dynamic Seat Matrix -->
+              <div id="demo-matrix" class="grid grid-cols-3 gap-3 max-w-md mx-auto w-full my-auto"></div>
+
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 mt-4 pt-3 border-t border-slate-800/80">
+                <span>Click Left Tool Slots to customize pod & schedule</span>
+                <span id="overlap-indicator" class="text-rose-400">1 Overlap Detected on Seat #1</span>
+              </div>
+            </div>
+
+            <!-- Right Vertical Inspector Bar -->
+            <div class="col-span-12 lg:col-span-2 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-700 bg-slate-900/90 p-3 font-mono text-xs space-y-3">
+              <div class="text-slate-400 font-bold border-b border-slate-700 pb-1">INSPECTOR</div>
+              <div id="inspector-content" class="text-slate-300 space-y-2 leading-relaxed">
+                <div><span class="text-slate-500">Tool:</span> RECT</div>
+                <div><span class="text-slate-500">Wave:</span> 8AM</div>
+                <div><span class="text-slate-500">Pod:</span> 3x3 (9 Seats)</div>
+                <div><span class="text-slate-500">On-Time:</span> 7 Agents</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Status Bar -->
+          <div id="bottom-bar" class="border-t-2 border-slate-700 bg-slate-950 px-4 py-2.5 font-mono text-xs text-emerald-400">
+            STATUS: Ready. Click [8AM], [3x3], or [AUTOMATE] above to test the desktop layout workflow.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 Core Pillars Section -->
+    <section id="pillars" class="py-20 max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-6 space-y-3">
+          <div class="text-indigo-400 font-mono text-xs font-bold">01 / SCHEDULE DE-CONFLICTION</div>
+          <h3 class="text-xl font-bold text-white">Solve Team & Agent Overlaps</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Addresses seating collisions when team schedules overlap during handoffs. Assign seats by team wave (`8AM`, `4PM`, `12MN`) and individual agent schedules.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-6 space-y-3">
+          <div class="text-emerald-400 font-mono text-xs font-bold">02 / ROOM-AGNOSTIC LAYOUT</div>
+          <h3 class="text-xl font-bold text-white">Flexible Floor Dimensions</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Room size never limits your setup. Drop `2x2`, `3x3`, or `4x3` desk pods anywhere on the floor plan and scale room dimensions on the fly.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-6 space-y-3">
+          <div class="text-amber-400 font-mono text-xs font-bold">03 / CRM CUSTOMIZATION</div>
+          <h3 class="text-xl font-bold text-white">On-Time Attendance Control</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Customize exactly how many agents per schedule are on time, account for rest days or absences, and auto-allocate open seats with one click.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+    <p>© 2026 SeatSync · Hosted on seats.phguilds.org</p>
+  </footer>
+
+  <!-- Interactive Wireframe Demo Script -->
+  <script>
+    const shapes = ['RECT', 'DESK', 'WALL'];
+    const shifts = ['8AM', '4PM', '12MN'];
+    const grids = [
+      { label: '2x2', cols: 2, total: 4 },
+      { label: '3x3', cols: 3, total: 9 },
+      { label: '4x3', cols: 4, total: 12 }
+    ];
+
+    let shapeIdx = 0;
+    let shiftIdx = 0;
+    let gridIdx = 1; // Starts at 3x3
+    let onTimeAgents = 7;
+    let hasOverlap = true;
+    let currentTab = 'LAYOUT';
+
+    function cycleShape() {
+      shapeIdx = (shapeIdx + 1) % shapes.length;
+      document.getElementById('btn-shape').textContent = shapes[shapeIdx];
+      updateUI('Changed tool shape to ' + shapes[shapeIdx]);
+    }
+
+    function cycleShift() {
+      shiftIdx = (shiftIdx + 1) % shifts.length;
+      document.getElementById('btn-shift').textContent = shifts[shiftIdx];
+      updateUI('Switched active schedule wave to ' + shifts[shiftIdx]);
+    }
+
+    function cycleGrid() {
+      gridIdx = (gridIdx + 1) % grids.length;
+      document.getElementById('btn-grid').textContent = grids[gridIdx].label;
+      updateUI('Resized pod matrix to ' + grids[gridIdx].label);
+    }
+
+    function adjustAgents(delta) {
+      onTimeAgents = Math.max(1, Math.min(15, onTimeAgents + delta));
+      hasOverlap = onTimeAgents > grids[gridIdx].total;
+      updateUI('Updated CRM On-Time Agent count to ' + onTimeAgents);
+    }
+
+    function autoResolve() {
+      hasOverlap = false;
+      if (onTimeAgents > grids[gridIdx].total) {
+        gridIdx = 2; // Expand to 4x3 pod automatically
+        document.getElementById('btn-grid').textContent = grids[gridIdx].label;
+      }
+      updateUI('AUTOMATE complete: All shift overlaps resolved across seats.');
+    }
+
+    function setTab(tabName) {
+      currentTab = tabName;
+      ['LAYOUT', 'DIMENSION', 'SCHEDULE', 'AUTOMATE'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        btn.className = (t === tabName)
+          ? 'px-6 py-3 font-mono text-sm font-bold border-r border-slate-800 bg-indigo-600 text-white'
+          : 'px-6 py-3 font-mono text-sm font-bold border-r border-slate-800 text-slate-400 hover:text-white';
+      });
+      if (tabName === 'AUTOMATE') {
+        autoResolve();
+      } else {
+        updateUI('Switched top view tab to [' + tabName + ']');
+      }
+    }
+
+    function updateUI(statusMsg) {
+      const g = grids[gridIdx];
+      const matrix = document.getElementById('demo-matrix');
+      matrix.style.gridTemplateColumns = `repeat(${g.cols}, minmax(0, 1fr))`;
+      matrix.innerHTML = '';
+
+      for (let i = 1; i <= g.total; i++) {
+        const cell = document.createElement('div');
+        const isConflict = (hasOverlap && i === 1) || (onTimeAgents > g.total && i <= (onTimeAgents - g.total));
+        const isSeated = i <= onTimeAgents;
+
+        let cls = 'bg-slate-900 border-slate-700 text-slate-500';
+        let label = 'OPEN';
+        if (isConflict) {
+          cls = 'bg-rose-600/80 border-rose-400 text-white animate-pulse';
+          label = 'OVERLAP!';
+        } else if (isSeated) {
+          cls = 'bg-indigo-600/80 border-indigo-400 text-white';
+          label = shifts[shiftIdx] + ' AG-' + i;
+        }
+
+        cell.className = `h-16 rounded border-2 flex flex-col items-center justify-center font-mono text-xs ${cls}`;
+        cell.innerHTML = `<span class="font-bold">SEAT #${i}</span><span class="text-[10px] opacity-90">${label}</span>`;
+        matrix.appendChild(cell);
+      }
+
+      document.getElementById('canvas-mode-title').textContent = `MODE: ${currentTab} (${g.label} Pod)`;
+      document.getElementById('canvas-specs').textContent = `SHIFT: ${shifts[shiftIdx]} | ON-TIME: ${onTimeAgents}/${g.total}`;
+      document.getElementById('overlap-indicator').textContent = hasOverlap
+        ? '⚠ Overlap Detected! Click [AUTOMATE] or [AUTO-FIX]'
+        : '✓ Zero Overlaps (All Teams Seated Cleanly)';
+      document.getElementById('overlap-indicator').className = hasOverlap ? 'text-rose-400' : 'text-emerald-400';
+
+      document.getElementById('inspector-content').innerHTML = `
+        <div><span class="text-slate-500">Mode:</span> ${currentTab}</div>
+        <div><span class="text-slate-500">Tool:</span> ${shapes[shapeIdx]}</div>
+        <div><span class="text-slate-500">Shift:</span> ${shifts[shiftIdx]}</div>
+        <div><span class="text-slate-500">Pod:</span> ${g.label} (${g.total} Seats)</div>
+        <div><span class="text-slate-500">On-Time:</span> ${onTimeAgents} Agents</div>
+      `;
+
+      document.getElementById('bottom-bar').textContent = 'STATUS: ' + statusMsg;
+    }
+
+    updateUI('Ready. Click any left button or top tab to test.');
+  </script>
+</body>
+</html>
